@@ -1,0 +1,112 @@
+<div class="min-h-screen flex flex-col">
+  <app-header></app-header>
+  
+  <main class="flex-1 pt-20">
+    <section class="bg-gradient-to-br from-rose-600 to-red-600 py-16 md:py-24 text-white">
+      <div class="container mx-auto px-4 text-center">
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+          Explorez Nos Cours
+        </h1>
+        <p class="text-lg text-white/80 max-w-2xl mx-auto mb-8">
+          Découvrez des cours de qualité des écoles à travers la RDC. Apprenez à votre rythme avec des sessions flexibles.
+        </p>
+        
+        <div class="max-w-xl mx-auto relative">
+          <mat-icon class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">search</mat-icon>
+          <input
+            type="text"
+            placeholder="Rechercher des cours..."
+            [value]="searchQuery()"
+            (input)="searchQuery.set($any($event.target).value)"
+            class="w-full pl-12 pr-4 h-14 text-lg bg-white border-0 rounded-lg shadow-xl text-gray-900"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div class="flex flex-wrap items-center gap-2">
+            <mat-icon class="text-gray-500">tune</mat-icon>
+            <span class="text-sm font-medium text-gray-600 mr-2">Catégorie:</span>
+            @for (cat of categories; track cat) {
+              <button
+                mat-stroked-button
+                [class.!bg-rose-600]="selectedCategory() === cat"
+                [class.!text-white]="selectedCategory() === cat"
+                (click)="selectedCategory.set(cat)"
+                class="!rounded-full !text-xs"
+              >
+                {{ cat }}
+              </button>
+            }
+          </div>
+          
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="text-sm font-medium text-gray-600 mr-2">Niveau:</span>
+            @for (level of levels; track level) {
+              <button
+                mat-stroked-button
+                [class.!bg-rose-600]="selectedLevel() === level"
+                [class.!text-white]="selectedLevel() === level"
+                (click)="selectedLevel.set(level)"
+                class="!rounded-full !text-xs"
+              >
+                {{ level }}
+              </button>
+            }
+          </div>
+        </div>
+
+        @if (hasActiveFilters) {
+          <div class="flex items-center gap-2 mb-6">
+            <span class="text-sm text-gray-600">Filtres actifs:</span>
+            @if (searchQuery()) {
+              <mat-chip class="!text-xs">
+                Recherche: {{ searchQuery() }}
+                <mat-icon (click)="searchQuery.set('')" class="!w-4 !h-4 cursor-pointer">close</mat-icon>
+              </mat-chip>
+            }
+            @if (selectedCategory() !== 'Tous') {
+              <mat-chip class="!text-xs">
+                {{ selectedCategory() }}
+                <mat-icon (click)="selectedCategory.set('Tous')" class="!w-4 !h-4 cursor-pointer">close</mat-icon>
+              </mat-chip>
+            }
+            @if (selectedLevel() !== 'Tous Niveaux') {
+              <mat-chip class="!text-xs">
+                {{ selectedLevel() }}
+                <mat-icon (click)="selectedLevel.set('Tous Niveaux')" class="!w-4 !h-4 cursor-pointer">close</mat-icon>
+              </mat-chip>
+            }
+            <button mat-button (click)="clearFilters()" class="!text-sm">Tout effacer</button>
+          </div>
+        }
+
+        <div class="flex items-center justify-between mb-6">
+          <p class="text-gray-600">Affichage de <span class="font-semibold text-gray-900">{{ filteredCourses.length }}</span> cours</p>
+        </div>
+
+        @if (filteredCourses.length > 0) {
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @for (course of filteredCourses; track course.id) {
+              <app-course-card [course]="course"></app-course-card>
+            }
+          </div>
+        } @else {
+          <div class="text-center py-16">
+            <div class="w-16 h-16 mx-auto mb-4 bg-gray-200 rounded-full flex items-center justify-center">
+              <mat-icon class="text-gray-500">search</mat-icon>
+            </div>
+            <h3 class="font-bold text-xl mb-2">Aucun cours trouvé</h3>
+            <p class="text-gray-600 mb-4">Essayez d'ajuster votre recherche ou vos filtres.</p>
+            <button mat-stroked-button (click)="clearFilters()">Effacer tous les filtres</button>
+          </div>
+        }
+      </div>
+    </section>
+  </main>
+
+  <app-footer></app-footer>
+</div>

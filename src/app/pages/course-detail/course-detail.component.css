@@ -1,0 +1,12 @@
+:host {
+  display: block;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 0 !important;
+}
+
+::ng-deep .mat-list-item {
+  height: auto !important;
+  padding: 0 !important;
+}

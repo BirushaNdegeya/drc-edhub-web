@@ -1,0 +1,96 @@
+<div class="min-h-screen bg-gray-50">
+  <app-header></app-header>
+  
+  <main class="pt-24 pb-16">
+    <!-- Hero Section -->
+    <section class="container mx-auto px-4 mb-16">
+      <div class="text-center max-w-3xl mx-auto">
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          Nos Écoles Partenaires
+        </h1>
+        <p class="text-lg text-gray-600 mb-8">
+          Découvrez les établissements qui font confiance à DrcEdHub pour digitaliser leur enseignement et offrir une expérience d'apprentissage moderne.
+        </p>
+        <a routerLink="/add-school" mat-flat-button color="primary" class="!h-12">
+          <mat-icon>add</mat-icon>
+          Demander l'ajout de votre école
+        </a>
+      </div>
+    </section>
+
+    <!-- Schools Grid -->
+    <section class="container mx-auto px-4">
+      @if (loading()) {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (i of [1, 2, 3]; track i) {
+            <mat-card class="animate-pulse">
+              <mat-card-header>
+                <div class="h-6 bg-gray-200 rounded w-3/4"></div>
+              </mat-card-header>
+              <mat-card-content>
+                <div class="h-4 bg-gray-200 rounded w-full mb-2"></div>
+                <div class="h-4 bg-gray-200 rounded w-2/3"></div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      } @else if (schools.length === 0) {
+        <div class="text-center py-16">
+          <mat-icon class="!w-16 !h-16 text-gray-400 mb-4">business</mat-icon>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">
+            Aucune école pour le moment
+          </h3>
+          <p class="text-gray-600 mb-6">
+            Soyez le premier à ajouter votre établissement sur DrcEdHub.
+          </p>
+          @if (user()) {
+            <a routerLink="/add-school" mat-flat-button color="primary">
+              <mat-icon>add</mat-icon>
+              Ajouter une école
+            </a>
+          }
+        </div>
+      } @else {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          @for (school of schools; track school.id) {
+            <mat-card class="hover:shadow-lg transition-shadow">
+              <mat-card-header>
+                <div class="flex items-center gap-3 w-full">
+                  @if (school.logo_url) {
+                    <img 
+                      [src]="school.logo_url" 
+                      [alt]="school.name" 
+                      class="h-12 w-12 rounded-lg object-cover"
+                    />
+                  } @else {
+                    <div class="h-12 w-12 rounded-lg bg-rose-100 flex items-center justify-center">
+                      <mat-icon class="text-rose-600">school</mat-icon>
+                    </div>
+                  }
+                  <mat-card-title class="!text-lg !mb-0">{{ school.name }}</mat-card-title>
+                </div>
+              </mat-card-header>
+              <mat-card-content>
+                <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+                  {{ school.description || "Aucune description disponible." }}
+                </p>
+                <div class="flex items-center gap-4 text-sm text-gray-500">
+                  <div class="flex items-center gap-1">
+                    <mat-icon class="!w-4 !h-4">people</mat-icon>
+                    <span>Étudiants</span>
+                  </div>
+                  <div class="flex items-center gap-1">
+                    <mat-icon class="!w-4 !h-4">menu_book</mat-icon>
+                    <span>Cours</span>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      }
+    </section>
+  </main>
+
+  <app-footer></app-footer>
+</div>

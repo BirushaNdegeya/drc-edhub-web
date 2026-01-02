@@ -1,0 +1,255 @@
+<div class="min-h-screen flex flex-col">
+  <app-header></app-header>
+  
+  <main class="flex-1 pt-20">
+    <!-- Hero -->
+    <section class="relative">
+      <div class="absolute inset-0 h-80 md:h-96">
+        <img 
+          [src]="courseData.thumbnail" 
+          [alt]="courseData.title"
+          class="w-full h-full object-cover"
+        />
+        <div class="absolute inset-0 bg-gradient-to-br from-rose-600/90 to-red-600/90"></div>
+      </div>
+
+      <div class="container mx-auto px-4 relative z-10 pt-12 pb-24 md:pt-16 md:pb-32">
+        <div class="max-w-3xl">
+          <div class="flex items-center gap-2 mb-4">
+            <mat-chip [color]="courseData.level === 'beginner' ? 'primary' : courseData.level === 'intermediate' ? 'accent' : 'warn'">
+              {{ getLevelLabel(courseData.level) }}
+            </mat-chip>
+            <mat-chip>{{ courseData.category }}</mat-chip>
+          </div>
+          
+          <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            {{ courseData.title }}
+          </h1>
+          
+          <p class="text-lg text-white/80 mb-6 max-w-2xl">
+            {{ courseData.description }}
+          </p>
+
+          <div class="flex flex-wrap items-center gap-6 text-sm text-white/70">
+            <span class="flex items-center gap-2">
+              <mat-icon class="!w-4 !h-4">schedule</mat-icon>
+              {{ courseData.duration }}
+            </span>
+            <span class="flex items-center gap-2">
+              <mat-icon class="!w-4 !h-4">people</mat-icon>
+              {{ courseData.students.toLocaleString() }} étudiants
+            </span>
+            <span class="flex items-center gap-2">
+              <mat-icon class="!w-4 !h-4">menu_book</mat-icon>
+              {{ totalLessons }} leçons
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Content -->
+    <section class="py-12 -mt-16 relative z-20">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- Main Content -->
+          <div class="lg:col-span-2 space-y-8">
+            <mat-tab-group>
+              <mat-tab label="Curriculum">
+                <div class="mt-6 space-y-4">
+                  @for (module of courseData.modules; track module.id; let moduleIndex = $index) {
+                    <mat-expansion-panel class="mb-4">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title>
+                          <div>
+                            <div class="font-bold">
+                              Module {{ moduleIndex + 1 }}: {{ module.title }}
+                            </div>
+                            <div class="text-sm text-gray-500 font-normal">
+                              {{ module.lessons.length }} leçons
+                            </div>
+                          </div>
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      
+                      <mat-list>
+                        @for (lesson of module.lessons; track lesson.id) {
+                          <mat-list-item class="hover:bg-gray-50">
+                            <div class="flex items-center justify-between w-full py-2">
+                              <div class="flex items-center gap-3">
+                                <div [class]="lesson.completed ? 'w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center' : 'w-8 h-8 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center'">
+                                  @if (lesson.completed) {
+                                    <mat-icon class="!w-4 !h-4">check_circle</mat-icon>
+                                  } @else {
+                                    <mat-icon class="!w-4 !h-4">{{ getLessonIcon(lesson.type) }}</mat-icon>
+                                  }
+                                </div>
+                                <div>
+                                  <p class="font-medium text-sm">{{ lesson.title }}</p>
+                                  <p class="text-xs text-gray-500 capitalize">
+                                    {{ lesson.type }} • {{ lesson.duration }}
+                                  </p>
+                                </div>
+                              </div>
+                              @if (enrolled()) {
+                                <button mat-button (click)="startLesson(lesson)" class="!text-xs">
+                                  <mat-icon class="!w-4 !h-4">play_circle</mat-icon>
+                                  Commencer
+                                </button>
+                              } @else {
+                                <mat-icon class="!w-4 !h-4 text-gray-400">lock</mat-icon>
+                              }
+                            </div>
+                          </mat-list-item>
+                        }
+                      </mat-list>
+                    </mat-expansion-panel>
+                  }
+                </div>
+              </mat-tab>
+
+              <mat-tab label="Aperçu">
+                <div class="mt-6 space-y-6">
+                  <mat-card>
+                    <mat-card-content class="p-6">
+                      <h3 class="font-bold text-lg mb-4">Ce que vous apprendrez</h3>
+                      <ul class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        @for (item of courseData.whatYouWillLearn; track item) {
+                          <li class="flex items-start gap-2">
+                            <mat-icon class="!w-5 !h-5 text-green-600 shrink-0">check_circle</mat-icon>
+                            <span class="text-sm">{{ item }}</span>
+                          </li>
+                        }
+                      </ul>
+                    </mat-card-content>
+                  </mat-card>
+
+                  <mat-card>
+                    <mat-card-content class="p-6">
+                      <h3 class="font-bold text-lg mb-4">Prérequis</h3>
+                      <ul class="space-y-2">
+                        @for (item of courseData.requirements; track item) {
+                          <li class="flex items-start gap-2">
+                            <mat-icon class="!w-4 !h-4 text-rose-600 shrink-0">chevron_right</mat-icon>
+                            <span class="text-sm">{{ item }}</span>
+                          </li>
+                        }
+                      </ul>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </mat-tab>
+
+              <mat-tab label="Instructeur">
+                <div class="mt-6">
+                  <mat-card>
+                    <mat-card-content class="p-6">
+                      <div class="flex items-start gap-4">
+                        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-rose-600 to-red-600 flex items-center justify-center text-white font-bold text-xl">
+                          JP
+                        </div>
+                        <div>
+                          <h3 class="font-bold text-lg">{{ courseData.instructor }}</h3>
+                          <p class="text-sm text-gray-600 mb-2">{{ courseData.school }}</p>
+                          <p class="text-sm">
+                            Professeur d'informatique avec plus de 15 ans d'expérience dans l'enseignement. 
+                            Passionné par l'accessibilité de la technologie pour tous.
+                          </p>
+                        </div>
+                      </div>
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="space-y-6">
+            <mat-card class="sticky top-24 shadow-xl border-2 border-rose-200">
+              <mat-card-content class="p-6 space-y-6">
+                @if (enrolled()) {
+                  <div>
+                    <div class="flex items-center justify-between text-sm mb-2">
+                      <span class="text-gray-600">Votre progression</span>
+                      <span class="font-bold text-rose-600">{{ progress }}%</span>
+                    </div>
+                    <mat-progress-bar mode="determinate" [value]="progress" class="!h-2"></mat-progress-bar>
+                  </div>
+                }
+
+                <div>
+                  <h4 class="font-bold mb-3">Sélectionnez votre Session</h4>
+                  <div class="flex gap-2">
+                    <button
+                      mat-stroked-button
+                      [class.!bg-rose-600]="selectedSession() === 'morning'"
+                      [class.!text-white]="selectedSession() === 'morning'"
+                      (click)="selectSession('morning')"
+                      class="flex-1 !text-xs"
+                    >
+                      Matin
+                    </button>
+                    <button
+                      mat-stroked-button
+                      [class.!bg-rose-600]="selectedSession() === 'afternoon'"
+                      [class.!text-white]="selectedSession() === 'afternoon'"
+                      (click)="selectSession('afternoon')"
+                      class="flex-1 !text-xs"
+                    >
+                      Après-midi
+                    </button>
+                    <button
+                      mat-stroked-button
+                      [class.!bg-rose-600]="selectedSession() === 'evening'"
+                      [class.!text-white]="selectedSession() === 'evening'"
+                      (click)="selectSession('evening')"
+                      class="flex-1 !text-xs"
+                    >
+                      Soir
+                    </button>
+                  </div>
+                </div>
+
+                <button 
+                  mat-flat-button
+                  [color]="enrolled() ? 'primary' : 'primary'"
+                  class="w-full !h-12"
+                  (click)="enroll()"
+                >
+                  @if (enrolled()) {
+                    <mat-icon>play_circle</mat-icon>
+                    Continuer l'Apprentissage
+                  } @else {
+                    S'inscrire Maintenant - Gratuit
+                  }
+                </button>
+
+                <div class="space-y-3 text-sm">
+                  <div class="flex items-center justify-between py-2 border-b border-gray-200">
+                    <span class="text-gray-600">École</span>
+                    <span class="font-medium">{{ courseData.school }}</span>
+                  </div>
+                  <div class="flex items-center justify-between py-2 border-b border-gray-200">
+                    <span class="text-gray-600">Langue</span>
+                    <span class="font-medium">{{ courseData.language }}</span>
+                  </div>
+                  <div class="flex items-center justify-between py-2 border-b border-gray-200">
+                    <span class="text-gray-600">Dernière Mise à Jour</span>
+                    <span class="font-medium">{{ courseData.lastUpdated }}</span>
+                  </div>
+                  <div class="flex items-center justify-between py-2">
+                    <span class="text-gray-600">Certificat</span>
+                    <mat-chip color="primary">Inclus</mat-chip>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <app-footer></app-footer>
+</div>
