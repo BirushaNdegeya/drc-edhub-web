@@ -218,7 +218,11 @@
                   (click)="enroll()"
                 >
                   @if (enrolled()) {
-                    <mat-icon>play_circle</mat-icon>
+                    <ng-container matButtonIcon>
+                      <mat-icon>play_circle</mat-icon>
+                    </ng-container>
+                  }
+                  @if (enrolled()) {
                     Continuer l'Apprentissage
                   } @else {
                     S'inscrire Maintenant - Gratuit
