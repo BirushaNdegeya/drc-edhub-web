@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,8 +14,9 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
+  constructor(private authService: AuthService) {}
+
   signInWithGoogle() {
-    // Mock Google sign in
-    console.log('Sign in with Google');
+    this.authService.loginWithGoogle();
   }
 }

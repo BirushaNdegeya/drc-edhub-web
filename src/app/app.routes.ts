@@ -10,6 +10,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
   },
   {
+    path: 'auth/google/callback',
+    loadComponent: () => import('./pages/auth-callback/auth-callback.component').then(m => m.AuthCallbackComponent)
+  },
+  {
     path: 'courses',
     loadComponent: () => import('./pages/courses/courses.component').then(m => m.CoursesComponent)
   },
