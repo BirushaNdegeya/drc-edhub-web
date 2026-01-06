@@ -36,6 +36,7 @@ interface Journal {
 })
 export class JournalsComponent {
   selectedFilter = signal<string>('Tous');
+  searchTerm = signal<string>('');
 
   journals: Journal[] = [
     {
@@ -98,16 +99,49 @@ export class JournalsComponent {
 
   get filteredJournals() {
     const filter = this.selectedFilter();
-    if (filter === 'Tous') {
-      return this.journals;
+    const term = this.searchTerm().trim().toLowerCase();
+
+    // Start with filter-by-button if set
+    let results = this.journals;
+    if (filter !== 'Tous') {
+      results = results.filter(j => j.category === filter || j.year.toString() === filter);
     }
-    return this.journals.filter(j => 
-      j.category === filter || j.year.toString() === filter
+
+    // If no search term, return based on selected filter
+    if (!term) return results;
+
+    // If the user typed a year range like "2010-2011", parse and filter by range
+    const rangeMatch = term.match(/(\d{4})\s*-\s*(\d{4})/);
+    if (rangeMatch) {
+      const y1 = parseInt(rangeMatch[1], 10);
+      const y2 = parseInt(rangeMatch[2], 10);
+      const min = Math.min(y1, y2);
+      const max = Math.max(y1, y2);
+      return results.filter(j => j.year >= min && j.year <= max);
+    }
+
+    // If the user typed a single year like "2024", filter by that year
+    const yearMatch = term.match(/\b(\d{4})\b/);
+    if (yearMatch) {
+      const y = parseInt(yearMatch[1], 10);
+      return results.filter(j => j.year === y);
+    }
+
+    // Otherwise do a text search against title, description and category
+    return results.filter(j =>
+      j.title.toLowerCase().includes(term) ||
+      j.description.toLowerCase().includes(term) ||
+      j.category.toLowerCase().includes(term) ||
+      j.fileSize.toLowerCase().includes(term)
     );
   }
 
   downloadJournal(journal: Journal) {
     // Mock download
     console.log('Downloading:', journal.title);
+  }
+
+  onSearch(value: string) {
+    this.searchTerm.set(value || '');
   }
 }

@@ -18,6 +18,7 @@ export interface User {
   class?: string;
   email?: string;
   picture?: string; // For Google profile picture
+  avatar?: string; // Some APIs return `avatar` instead of `picture`
 }
 
 export interface UpdateUserRequest {

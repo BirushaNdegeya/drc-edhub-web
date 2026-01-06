@@ -5,7 +5,20 @@
       <h1 class="text-3xl font-bold mb-6">Profil</h1>
       <mat-card>
         <mat-card-content>
-          <p>Contenu du profil à venir...</p>
+          <div class="flex items-center gap-6">
+            <div>
+              <ng-container *ngIf="user() as u">
+                <img *ngIf="u.picture || u.avatar" [src]="u.picture || u.avatar" [alt]="(u.firstname || u.email)" class="w-24 h-24 rounded-full object-cover border-2 border-gray-200">
+                <div *ngIf="!(u.picture || u.avatar)" class="w-24 h-24 rounded-full bg-rose-600 flex items-center justify-center text-white font-semibold text-xl">
+                  {{ (u.firstname?.charAt(0) || u.email?.charAt(0) || 'U') | uppercase }}
+                </div>
+              </ng-container>
+            </div>
+            <div>
+              <h2 class="text-xl font-semibold">{{ user()?.firstname }} {{ user()?.lastname }}</h2>
+              <p class="text-sm text-gray-600">{{ user()?.email }}</p>
+            </div>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>
