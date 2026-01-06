@@ -31,7 +31,7 @@ interface CourseData {
   title: string;
   description: string;
   thumbnail: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
+  level: 'primaire' | 'secondaire' | 'universitaire';
   duration: string;
   students: number;
   school: string;
@@ -74,7 +74,7 @@ export class CourseDetailComponent {
     title: 'Introduction à l\'Informatique',
     description: 'Apprenez les fondamentaux de la programmation et de la pensée computationnelle avec des exercices pratiques. Ce cours complet couvre tout, des algorithmes de base aux structures de données, vous préparant à une carrière dans la technologie.',
     thumbnail: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&h=600&fit=crop',
-    level: 'beginner',
+    level: 'primaire',
     duration: '8 semaines',
     students: 1250,
     school: 'Université de Kinshasa',
@@ -146,9 +146,9 @@ export class CourseDetailComponent {
 
   getLevelLabel(level: string): string {
     const labels: Record<string, string> = {
-      beginner: 'Débutant',
-      intermediate: 'Intermédiaire',
-      advanced: 'Avancé'
+      primaire: 'Primaire',
+      secondaire: 'Secondaire',
+      universitaire: 'Universitaire'
     };
     return labels[level] || level;
   }

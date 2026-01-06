@@ -12,7 +12,7 @@ export interface CourseCardData {
   title: string;
   description: string;
   thumbnail: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
+  level: 'primaire' | 'secondaire' | 'universitaire';
   duration: string;
   students: number;
   school: string;
@@ -40,18 +40,18 @@ export class CourseCardComponent {
 
   getLevelLabel(level: string): string {
     const labels: Record<string, string> = {
-      beginner: 'Débutant',
-      intermediate: 'Intermédiaire',
-      advanced: 'Avancé'
+      primaire: 'Primaire',
+      secondaire: 'Secondaire',
+      universitaire: 'Universitaire'
     };
     return labels[level] || level;
   }
 
   getLevelColor(level: string): string {
     const colors: Record<string, string> = {
-      beginner: 'primary',
-      intermediate: 'accent',
-      advanced: 'warn'
+      primaire: 'primary',
+      secondaire: 'accent',
+      universitaire: 'warn'
     };
     return colors[level] || 'primary';
   }
