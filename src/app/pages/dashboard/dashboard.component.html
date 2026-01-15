@@ -2,10 +2,139 @@
   <app-header></app-header>
   <main class="flex-1 pt-20">
     <div class="container mx-auto px-4 py-12">
-      <h1 class="text-3xl font-bold mb-6">Tableau de bord</h1>
+      <!-- Header -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold mb-2">Tableau de bord</h1>
+        <p class="text-gray-600">Bienvenue ! Suivez votre progression et continuez votre apprentissage.</p>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <mat-card class="bg-gradient-to-br from-rose-500 to-rose-600 text-white">
+          <mat-card-content class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm opacity-90 mb-1">Cours inscrits</p>
+                <p class="text-3xl font-bold">{{ totalCourses }}</p>
+              </div>
+              <mat-icon class="!w-12 !h-12 opacity-80">school</mat-icon>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="bg-gradient-to-br from-blue-500 to-blue-600 text-white">
+          <mat-card-content class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm opacity-90 mb-1">Progression moyenne</p>
+                <p class="text-3xl font-bold">{{ averageProgress }}%</p>
+              </div>
+              <mat-icon class="!w-12 !h-12 opacity-80">trending_up</mat-icon>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="bg-gradient-to-br from-green-500 to-green-600 text-white">
+          <mat-card-content class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm opacity-90 mb-1">Cours terminés</p>
+                <p class="text-3xl font-bold">{{ completedCourses }}</p>
+              </div>
+              <mat-icon class="!w-12 !h-12 opacity-80">check_circle</mat-icon>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="bg-gradient-to-br from-purple-500 to-purple-600 text-white">
+          <mat-card-content class="p-6">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm opacity-90 mb-1">En cours</p>
+                <p class="text-3xl font-bold">{{ inProgressCourses }}</p>
+              </div>
+              <mat-icon class="!w-12 !h-12 opacity-80">play_circle</mat-icon>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Enrolled Courses Section -->
+      <div class="mb-8">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-2xl font-bold mb-1">Mes Cours</h2>
+            <p class="text-gray-600">Continuez votre apprentissage</p>
+          </div>
+          <a routerLink="/courses" mat-flat-button color="primary">
+            <mat-icon>add</mat-icon>
+            Explorer les cours
+          </a>
+        </div>
+
+        @if (loading()) {
+          <div class="flex items-center justify-center py-12">
+            <div class="text-center">
+              <mat-icon class="!w-16 !h-16 text-gray-400 animate-spin">refresh</mat-icon>
+              <p class="text-gray-600 mt-4">Chargement de vos cours...</p>
+            </div>
+          </div>
+        } @else if (enrolledCourses().length === 0) {
+          <mat-card>
+            <mat-card-content class="p-12 text-center">
+              <mat-icon class="!w-20 !h-20 text-gray-300 mb-4">school</mat-icon>
+              <h3 class="text-xl font-semibold mb-2">Aucun cours inscrit</h3>
+              <p class="text-gray-600 mb-6">Commencez votre parcours d'apprentissage en explorant nos cours disponibles.</p>
+              <a routerLink="/courses" mat-flat-button color="primary">
+                <mat-icon>explore</mat-icon>
+                Explorer les cours
+              </a>
+            </mat-card-content>
+          </mat-card>
+        } @else {
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @for (course of enrolledCourses(); track course.id) {
+              <app-course-card [course]="course"></app-course-card>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Quick Actions -->
       <mat-card>
-        <mat-card-content>
-          <p>Contenu du tableau de bord à venir...</p>
+        <mat-card-content class="p-6">
+          <h3 class="text-lg font-semibold mb-4">Actions rapides</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a routerLink="/courses" class="flex items-center gap-3 p-4 rounded-lg border-2 border-gray-200 hover:border-rose-300 hover:bg-rose-50 transition-all no-underline group">
+              <div class="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center text-rose-600 group-hover:bg-rose-600 group-hover:text-white transition-colors">
+                <mat-icon>explore</mat-icon>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-900 group-hover:text-rose-600 transition-colors">Explorer les cours</p>
+                <p class="text-sm text-gray-600">Découvrir de nouveaux cours</p>
+              </div>
+            </a>
+
+            <a routerLink="/journals" class="flex items-center gap-3 p-4 rounded-lg border-2 border-gray-200 hover:border-rose-300 hover:bg-rose-50 transition-all no-underline group">
+              <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                <mat-icon>book</mat-icon>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">Journaux</p>
+                <p class="text-sm text-gray-600">Consulter vos journaux</p>
+              </div>
+            </a>
+
+            <a routerLink="/profile" class="flex items-center gap-3 p-4 rounded-lg border-2 border-gray-200 hover:border-rose-300 hover:bg-rose-50 transition-all no-underline group">
+              <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-purple-600 group-hover:bg-purple-600 group-hover:text-white transition-colors">
+                <mat-icon>person</mat-icon>
+              </div>
+              <div>
+                <p class="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">Mon Profil</p>
+                <p class="text-sm text-gray-600">Gérer votre compte</p>
+              </div>
+            </a>
+          </div>
         </mat-card-content>
       </mat-card>
     </div>

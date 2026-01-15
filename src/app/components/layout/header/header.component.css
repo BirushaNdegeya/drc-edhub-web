@@ -1,3 +1,48 @@
 :host {
   display: block;
 }
+
+/* Ensure header is always visible and on top */
+mat-toolbar {
+  position: relative;
+  overflow: visible;
+  z-index: 1000 !important;
+}
+
+/* Mobile menu container - ensure it's properly positioned */
+:host ::ng-deep .mat-mdc-toolbar {
+  overflow: visible;
+}
+
+/* Material menu dropdown - ensure it appears below header but doesn't cover it */
+:host ::ng-deep .mat-mdc-menu-panel {
+  z-index: 999 !important;
+  margin-top: 4px;
+}
+
+/* Ensure proper stacking context for toolbar - header should be visible */
+:host ::ng-deep mat-toolbar {
+  z-index: 1000 !important;
+  background: white !important;
+}
+
+/* Mobile menu content - ensure it has proper background and doesn't overlap header */
+.mobile-menu-container {
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+/* Ensure header content is always visible and not covered by menu */
+:host ::ng-deep .mat-mdc-toolbar .container {
+  z-index: 1001;
+  position: relative;
+}
+
+/* Ensure toolbar row stays visible */
+:host ::ng-deep .mat-mdc-toolbar > div:first-child {
+  position: relative;
+  z-index: 1002;
+  background: white;
+}

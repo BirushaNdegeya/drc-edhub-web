@@ -1,4 +1,4 @@
-import { Component, signal, OnInit, effect } from '@angular/core';
+import { Component, signal, OnInit, effect, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -70,6 +70,21 @@ export class HeaderComponent implements OnInit {
 
   closeMenu() {
     this.isMenuOpen.set(false);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    // Check if click is on menu toggle button or inside menu
+    const isMenuToggle = target.closest('button[aria-label="Toggle menu"]') || 
+                         target.closest('button[aria-label="Close menu"]');
+    const isInsideMenu = target.closest('.mobile-menu-container') ||
+                         target.closest('mat-menu');
+    
+    // Close menu if clicking outside menu and not on toggle button
+    if (this.isMenuOpen() && !isMenuToggle && !isInsideMenu) {
+      this.closeMenu();
+    }
   }
 
   signOut() {

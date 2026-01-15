@@ -12,7 +12,7 @@ const runtimeBaseUrl = (typeof window !== 'undefined' && window.__env && window.
   ? window.__env['API_BASE_URL']
   : (typeof process !== 'undefined' && process.env && (process.env as any)['API_BASE_URL'])
   ? (process.env as any)['API_BASE_URL']
-  : 'https://wires-chairs-fairy-references.trycloudflare.com';
+  : 'http://localhost:3000';
 
 export const API_CONFIG = {
   baseUrl: runtimeBaseUrl // fallback to the hardcoded URL if no env provided

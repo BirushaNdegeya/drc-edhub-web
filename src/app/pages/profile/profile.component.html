@@ -3,24 +3,55 @@
   <main class="flex-1 pt-20">
     <div class="container mx-auto px-4 py-12">
       <h1 class="text-3xl font-bold mb-6">Profil</h1>
-      <mat-card>
-        <mat-card-content>
-          <div class="flex items-center gap-6">
-            <div>
-              <ng-container *ngIf="user() as u">
-                <img *ngIf="u.picture || u.avatar" [src]="u.picture || u.avatar" [alt]="(u.firstname || u.email)" class="w-24 h-24 rounded-full object-cover border-2 border-gray-200">
-                <div *ngIf="!(u.picture || u.avatar)" class="w-24 h-24 rounded-full bg-rose-600 flex items-center justify-center text-white font-semibold text-xl">
-                  {{ (u.firstname?.charAt(0) || u.email?.charAt(0) || 'U') | uppercase }}
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Profile Info Card -->
+        <div class="lg:col-span-1">
+          <mat-card>
+            <mat-card-content>
+              <div class="flex flex-col items-center gap-4 py-4">
+                <div>
+                  <ng-container *ngIf="user() as u">
+                    <img *ngIf="u.picture || u.avatar" [src]="u.picture || u.avatar" [alt]="(u.firstname || u.email)" class="w-24 h-24 rounded-full object-cover border-2 border-gray-200">
+                    <div *ngIf="!(u.picture || u.avatar)" class="w-24 h-24 rounded-full bg-rose-600 flex items-center justify-center text-white font-semibold text-xl">
+                      {{ (u.firstname?.charAt(0) || u.email?.charAt(0) || 'U') | uppercase }}
+                    </div>
+                  </ng-container>
                 </div>
-              </ng-container>
-            </div>
-            <div>
-              <h2 class="text-xl font-semibold">{{ user()?.firstname }} {{ user()?.lastname }}</h2>
-              <p class="text-sm text-gray-600">{{ user()?.email }}</p>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+                <div class="text-center">
+                  <h2 class="text-xl font-semibold">{{ user()?.firstname }} {{ user()?.lastname }}</h2>
+                  <p class="text-sm text-gray-600">{{ user()?.email }}</p>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Navigation Menu -->
+        <div class="lg:col-span-2">
+          <mat-card>
+            <mat-card-content class="p-6">
+              <h2 class="text-xl font-semibold mb-4">Menu</h2>
+              <div class="flex flex-col gap-3">
+                <a 
+                  routerLink="/dashboard" 
+                  routerLinkActive="bg-rose-50 border-rose-600"
+                  class="flex items-center gap-4 p-4 rounded-lg border-2 border-gray-200 hover:border-rose-300 hover:bg-rose-50 transition-all no-underline group"
+                >
+                  <div class="w-12 h-12 rounded-lg bg-rose-600 flex items-center justify-center text-white group-hover:bg-rose-700 transition-colors">
+                    <mat-icon>dashboard</mat-icon>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="font-semibold text-gray-900 group-hover:text-rose-600 transition-colors">Tableau de bord</h3>
+                    <p class="text-sm text-gray-600">Voir vos cours et votre progression</p>
+                  </div>
+                  <mat-icon class="text-gray-400 group-hover:text-rose-600 transition-colors">chevron_right</mat-icon>
+                </a>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
     </div>
   </main>
   <app-footer></app-footer>

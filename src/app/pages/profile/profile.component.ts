@@ -1,15 +1,26 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../components/layout/header/header.component';
 import { FooterComponent } from '../../components/layout/footer/footer.component';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { UserService, User } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent, MatCardModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    HeaderComponent,
+    FooterComponent,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule
+  ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
